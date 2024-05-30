@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:state_notifier_provider/pages/todos_provider.dart';
+import 'package:state_notifier_provider/pages/todos_provider_async.dart';
 
-class TodosPage extends ConsumerWidget {
-  const TodosPage({super.key});
+class Todo extends ConsumerWidget {
+  const Todo({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final todos = ref.watch(todoProvider);
+    final todos = ref.watch(todoChangeProvider).todos;
     print(todos);
 
     return Scaffold(
@@ -22,31 +22,31 @@ class TodosPage extends ConsumerWidget {
           const SizedBox(height: 20.0),
 
           Expanded(
-            child: ListView.builder(
-              itemCount: todos.length,
-              itemBuilder: (context, index){
-                final todo = todos[index];
-                return ListTile(
+            child: ListView(children: [
+              for (final todo in todos)
+                ListTile(
                   title: Text(todo.description),
                   leading: Checkbox(
                     value: todo.completed,
                     onChanged: (value){
-                      ref.read(todoProvider.notifier).toogleTodo(todo.id);
+                      ref.read(todoChangeProvider).toggleTodo(todo.id);
                     },
                   ),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: (){
-                      ref.read(todoProvider.notifier).removeTodo(todo.id);
+                      ref.read(todoChangeProvider).removeTodos(todo.id);
                     },
                   ),
-                );
-              },
-            ),
+                )
+            ])
           )
         ],
       )
     );
+
+      
+
   }
 }
 
@@ -82,7 +82,7 @@ class _AddTodoState extends ConsumerState<AddTodo> {
         ),
         onSubmitted: (desc){
           if(desc.isNotEmpty){
-            ref.read(todoProvider.notifier).addTodo(desc);
+            ref.read(todoChangeProvider.notifier).addTodos(desc);
             _controller.clear();
           }
 

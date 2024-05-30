@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'pages/todos_page.dart';
+import 'pages/todo.dart';
 import 'widgets/custom_button.dart';
 
 void main() {
@@ -44,7 +44,7 @@ class MyHomePage extends StatelessWidget {
           children: const [
             CustomButton(
               title: 'Todo List',
-              child: TodosPage(),
+              child: Todo(),
             ),
           ],
         ),
